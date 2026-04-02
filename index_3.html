@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VEER Menu</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: #1a1a1a;
+  }
+
+  /* ── COVER ── */
+  #cover-page {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0ebe0;
+  }
+
+  .cover-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  #coverImg {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cover-btn {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    z-index: 10;
+  }
+
+  .cover-btn:active {
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* ── MENU PAGES ── */
+  .menu-page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #1a1a1a;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .menu-page.active {
+    display: flex;
+  }
+
+  /* Sticky top bar */
+  .top-bar {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #1a1a1a;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #2a2a2a;
+  }
+
+  .back-btn {
+    background: none;
+    border: 1.5px solid #4a8fa3;
+    color: #4a8fa3;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    font-family: sans-serif;
+  }
+
+  .back-btn:active {
+    background: #4a8fa3;
+    color: white;
+  }
+
+  .page-title {
+    color: #c4973a;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+  }
+
+  /* Pages stacked vertically */
+  .menu-images {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .menu-images img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Divider between pages */
+  .page-divider {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #c4973a, transparent);
+    opacity: 0.4;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ══ COVER PAGE ══ -->
+<div id="cover-page">
+  <div class="cover-wrap" id="coverWrap">
+    <img src="menu_cover.png" alt="VEER Menu" id="coverImg">
+    <button class="cover-btn" id="foodBtn" type="button"></button>
+    <button class="cover-btn" id="alcoholBtn" type="button"></button>
+    <button class="cover-btn" id="nonalcBtn" type="button"></button>
+  </div>
+</div>
+
+<!-- ══ FOOD MENU ══ -->
+<div class="menu-page" id="food-page">
+  <div class="top-bar">
+    <button class="back-btn" type="button" id="back-food">&#8592; BACK</button>
+    <span class="page-title">Food Menu</span>
+  </div>
+  <div class="menu-images">
+    <img src="food_p1.jpeg" alt="Food Menu Page 1">
+    <div class="page-divider"></div>
+    <img src="food_p2.jpeg" alt="Food Menu Page 2">
+  </div>
+</div>
+
+<!-- ══ ALCOHOL MENU ══ -->
+<div class="menu-page" id="alcohol-page">
+  <div class="top-bar">
+    <button class="back-btn" type="button" id="back-alcohol">&#8592; BACK</button>
+    <span class="page-title">Alcohol Menu</span>
+  </div>
+  <div class="menu-images">
+    <img src="alcohol_p1.jpeg" alt="Alcohol Menu Page 1">
+    <div class="page-divider"></div>
+    <img src="alcohol_p2.jpeg" alt="Alcohol Menu Page 2">
+  </div>
+</div>
+
+<!-- ══ NON-ALCOHOLIC MENU ══ -->
+<div class="menu-page" id="nonalc-page">
+  <div class="top-bar">
+    <button class="back-btn" type="button" id="back-nonalc">&#8592; BACK</button>
+    <span class="page-title">Non-Alcoholic Menu</span>
+  </div>
+  <div class="menu-images">
+    <img src="nonalc_p1.jpeg" alt="Non-Alcoholic Menu">
+  </div>
+</div>
+
+<script>
+  // Image original dimensions
+  var IMG_W = 1123;
+  var IMG_H = 1600;
+
+  // Button positions in original pixels
+  var btnDefs = [
+    { id: 'foodBtn',    menu: 'food',    top: 459,  h: 181, left: 50, w: 1023 },
+    { id: 'alcoholBtn', menu: 'alcohol', top: 835,  h: 180, left: 50, w: 1023 },
+    { id: 'nonalcBtn',  menu: 'nonalc',  top: 1210, h: 181, left: 50, w: 1023 },
+  ];
+
+  function positionButtons() {
+    var img = document.getElementById('coverImg');
+    var dW = img.offsetWidth;
+    var dH = img.offsetHeight;
+    if (!dW || !dH) return;
+    var sX = dW / IMG_W;
+    var sY = dH / IMG_H;
+
+    btnDefs.forEach(function(b) {
+      var el = document.getElementById(b.id);
+      el.style.top    = Math.round(b.top  * sY) + 'px';
+      el.style.height = Math.round(b.h    * sY) + 'px';
+      el.style.left   = Math.round(b.left * sX) + 'px';
+      el.style.width  = Math.round(b.w    * sX) + 'px';
+    });
+  }
+
+  // Position on load and resize
+  var coverImg = document.getElementById('coverImg');
+  if (coverImg.complete && coverImg.naturalWidth) {
+    positionButtons();
+  } else {
+    coverImg.addEventListener('load', positionButtons);
+  }
+  window.addEventListener('resize', positionButtons);
+  // Extra call after fonts/layout settle
+  setTimeout(positionButtons, 300);
+
+  // Open menu
+  function openMenu(type) {
+    document.getElementById('cover-page').style.display = 'none';
+    var page = document.getElementById(type + '-page');
+    page.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Back to cover
+  function goBack() {
+    document.querySelectorAll('.menu-page').forEach(function(p) {
+      p.classList.remove('active');
+    });
+    document.getElementById('cover-page').style.display = 'flex';
+    window.scrollTo(0, 0);
+  }
+
+  // Attach cover buttons - works on all browsers including Safari
+  btnDefs.forEach(function(b) {
+    var el = document.getElementById(b.id);
+    var menu = b.menu;
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      openMenu(menu);
+    });
+    // Touch support for Safari
+    el.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      openMenu(menu);
+    });
+  });
+
+  // Attach back buttons
+  ['food', 'alcohol', 'nonalc'].forEach(function(type) {
+    var btn = document.getElementById('back-' + type);
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      goBack();
+    });
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      goBack();
+    });
+  });
+</script>
+
+</body>
+</html>
